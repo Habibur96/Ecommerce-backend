@@ -5,7 +5,7 @@ export type Variant = {
 
 export type Inventory = {
   quantity: number;
-  inStook: boolean;
+  inStock: boolean;
 };
 
 export type Product = {
@@ -16,4 +16,6 @@ export type Product = {
   tags: string[];
   variants: Variant[];
   inventory: Inventory;
+  isDeleted: boolean
+  // isUpdaetd: boolean
 };
