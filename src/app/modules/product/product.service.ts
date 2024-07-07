@@ -19,16 +19,29 @@ const getSingleProductFromDB = async (productId: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateProductFromDB = async (property:any) => {
-
-  const result = await ProductModel.updateOne( property.updateNewProduct , property.filter,property.options);
-  console.log("Result = ",result)
+const updateProductFromDB = async (property: any) => {
+  const result = await ProductModel.updateOne(
+    property.updateNewProduct,
+    property.filter,
+    property.options,
+  );
+  console.log('Result = ', result);
   return result;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const deleteProductFromDB = async (productId: any) => {
-  const result = await ProductModel.deleteOne({ _id: productId}, { isDeleted: true });
+  const result = await ProductModel.deleteOne(
+    { _id: productId },
+    { isDeleted: true },
+  );
+  return result;
+};
+
+const searchProductFromDB = async (search: string) => {
+  const query = { name: { $regex: search } };
+  const result =await ProductModel.find(query);
+  // const result = await cursor.toArray();
   return result;
 };
 
@@ -37,5 +50,6 @@ export const productServices = {
   getAllProductsFromDB,
   getSingleProductFromDB,
   updateProductFromDB,
-  deleteProductFromDB
+  deleteProductFromDB,
+  searchProductFromDB,
 };

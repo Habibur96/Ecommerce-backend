@@ -165,10 +165,33 @@ const deleteProduct = async (req: Request, res: Response) => {
   }
 };
 
+
+//Search a product
+const searchProduct = async (req: Request, res: Response) => {
+  try {
+    const search = req.query.search;
+    console.log("search",search)
+    const result = await productServices.searchProductFromDB(search as string);
+    res.status(200).json({
+      success: true,
+      message: `Products matching search term '${search}' fetched successfully!`,
+      data: result,
+    });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Product not found',
+      error: err,
+    });
+  }
+};
+
 export const productControllers = {
   createProduct,
   getAllProducts,
   getSingleProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  searchProduct
 };

@@ -19,3 +19,6 @@ export type Product = {
   isDeleted: boolean
   // isUpdaetd: boolean
 };
+
+
+
