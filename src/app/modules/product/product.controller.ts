@@ -41,7 +41,7 @@ const getAllProducts = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: 'Route not found',
+      message: 'Failed to product create',
     });
   }
 };

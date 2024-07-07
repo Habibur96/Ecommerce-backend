@@ -5,13 +5,11 @@ import { OrderValidationSchema } from './order.validation';
 //create Order
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const  {order:orderData} = req.body;
-    // console.log({order})
+    const { order: orderData } = req.body;
+
     const zodparseData = OrderValidationSchema.parse(orderData);
-    const result = await orderServices.createOrderIntoDB(
-      zodparseData,
-    );
-    console.log("Result = ",result)
+    const result = await orderServices.createOrderIntoDB(zodparseData);
+
     res.status(200).json({
       sucess: true,
       message: 'Order created successfully!',
@@ -20,10 +18,32 @@ const createOrder = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: 'Failed o create product',
+      message: 'Failed to order create',
     });
   }
 };
+
+// Retrieve All Orders
+const getAllOrders = async (req: Request, res: Response) => {
+    try {
+   
+      const result = await orderServices.getAllOrdersFromDB();
+  
+      res.status(200).json({
+        sucess: true,
+        message: 'Order fetched successfully!',
+        data: result,
+      });
+
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed o create product',
+      });
+    }
+  };
+
 export const orderControllers = {
-    createOrder
-}
+  createOrder,
+  getAllOrders
+};
