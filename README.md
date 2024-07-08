@@ -1,0 +1,5 @@
+Clone the repository. [git clone https://github.com/your-username/your-repository.git]
+Navigate to the project directory [cd your-repository]
+Install dependencies. [npm i]
+From the terminal run this command [npm run build]
+Run this command [npm run start:dev]

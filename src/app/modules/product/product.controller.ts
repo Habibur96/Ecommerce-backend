@@ -40,11 +40,11 @@ const getAllProducts = async (req: Request, res: Response) => {
     } else {
       products = await productServices.getAllProductsFromDB();
     }
-
     res.status(200).json({
       success: true,
-      message: `Products matching search term ${searchTerm} fetched successfully!`,
-      data: products,
+      message: `Products ${searchTerm ? `matching search term '${searchTerm}'` : 'fetched successfully!'}`,
+      data: products
+      
     });
   } catch (err) {
     console.error('Error fetching products:', err);
