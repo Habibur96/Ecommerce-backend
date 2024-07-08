@@ -1,9 +1,6 @@
 import { Order } from './order.interface';
 import { OrderModel } from './order.model';
 
-
-
-
 const createOrderIntoDB = async (order: Order) => {
   const result = await OrderModel.create(order);
 
@@ -16,7 +13,15 @@ const getAllOrdersFromDB = async () => {
   return result;
 };
 
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getSingleOrderFromDB = async (email: any) => {
+    const result = await OrderModel.findOne({ email: email });
+    return result;
+  };
 export const orderServices = {
     createOrderIntoDB,
-    getAllOrdersFromDB
+    getAllOrdersFromDB,
+    getSingleOrderFromDB
 }

@@ -12,23 +12,33 @@ const getAllProductsFromDB = async () => {
   return result;
 };
 
+const searchProductFromDB = async (searchTerm: string) => {
+  const query = searchTerm 
+    ? { name: new RegExp(searchTerm, 'i'), isDeleted: false } 
+    : { isDeleted: false };
+
+  return await ProductModel.find(query);
+};
+
+
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSingleProductFromDB = async (productId: any) => {
   const result = await ProductModel.findOne({ _id: productId });
   return result;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateProductFromDB = async (property: any) => {
-  const result = await ProductModel.updateOne(
-    property.updateNewProduct,
-    property.filter,
-    property.options,
-  );
-  console.log('Result = ', result);
-  return result;
-};
 
+
+const updateProductFromDB = async (filter, updateNewProduct, options) => {
+  try {
+    const result = await ProductModel.updateOne(filter, updateNewProduct, options);
+    return result;
+  } catch (err) {
+    console.error("Error updating product in database:", err);
+    throw err;
+  }
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const deleteProductFromDB = async (productId: any) => {
   const result = await ProductModel.deleteOne(
@@ -38,12 +48,12 @@ const deleteProductFromDB = async (productId: any) => {
   return result;
 };
 
-const searchProductFromDB = async (search: string) => {
-  const query = { name: { $regex: search } };
-  const result =await ProductModel.find(query);
-  // const result = await cursor.toArray();
-  return result;
-};
+// const searchProductFromDB = async (search: string) => {
+//   const query = { name: { $regex: search } };
+//   const result =await ProductModel.find(query);
+//   // const result = await cursor.toArray();
+//   return result;
+// };
 
 export const productServices = {
   createProductIntoDB,

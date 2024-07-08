@@ -30,18 +30,28 @@ const createProduct = async (req: Request, res: Response) => {
 };
 
 //Retrieve a List of All Products
+
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await productServices.getAllProductsFromDB();
+    const searchTerm = req.query.searchTerm as string;
+    let products;
+
+    if (searchTerm) {
+      products = await productServices.searchProductFromDB(searchTerm);
+    } else {
+      products = await productServices.getAllProductsFromDB();
+    }
+
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully!',
-      data: result,
+      message: `Products ${searchTerm} fetched successfully!`,
+      data: products
     });
   } catch (err) {
+    console.error("Error fetching products:", err);
     res.status(500).json({
       success: false,
-      message: 'Failed to product create',
+      message: 'Failed to fetch products',
     });
   }
 };
@@ -64,87 +74,9 @@ const getSingleProduct = async (req: Request, res: Response) => {
   }
 };
 
-//Update Product Information
-// const updateProduct = async (req: Request, res: Response) => {
-//   try {
-//     const id = req.params.productId;
-//     // const filter = { _id: id };
-//     // const options = { upsert: true };
-//     const updateProduct = req.body;
-//     console.log(updateProduct)
-//     const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
-//       new: true, // returns the updated document
-//       runValidators: true // validates the update operation
-//   });
-//     // const updateNewProduct = {
-//     //   $set: {
-//     //     name: updateProduct.name,
-//     //     description: updateProduct.description,
-//     //     price: updateProduct.price,
-//     //     category: updateProduct.category,
-//     //     tags: updateProduct.ags,
-//     //     variants: updateProduct.variants,
-//     //     inventory: updateProduct.inventory,
-//     //   },
-//     // };
-//     const property = {
-//       updateNewProduct,
-//       filter,
-//       options,
-//     };
-//     const result = await productServices.updateProductFromDB(updatedUser);
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'Product updated successfully!',
-//       data: result,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       success: false,
-//       message: 'Not updated',
-//     });
-//   }
-// };
-
-const updateProduct = async (req: Request, res: Response) => {
-  try {
-    const productId = req.params.productId;
-    const updateData = req.body;
-
-    // Assume Product is your Mongoose model
-    // const updatedProduct = await ProductModel.findByIdAndUpdate(
-    //   productId,
-    //   updateData,
-    //   {
-    //     new: true, // returns the updated document
-    //     runValidators: true, // validates the update operation
-    //   },
-    // );
-    
-    const property = {
-      updateNewProduct: { _id: productId },
-      filter: updateData,
-      options: { new: true, runValidators: true },
-    };
-
-    const result = await productServices.updateProductFromDB(property);
-
-    res.status(200).json({
-      success: true,
-      message: 'Product updated successfully!',
-      data: result,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'Product not updated',
-    });
-  }
-};
 
 
-//Delete a Product
+// //Delete a Product
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
@@ -166,26 +98,77 @@ const deleteProduct = async (req: Request, res: Response) => {
 };
 
 
-//Search a product
-const searchProduct = async (req: Request, res: Response) => {
+
+const updateProduct = async (req: Request, res: Response) => {
   try {
-    const search = req.query.search;
-    console.log("search",search)
-    const result = await productServices.searchProductFromDB(search as string);
+    const id = req.params.productId;
+    const filter = { _id: id };
+    const options = { upsert: true }; // No need for strict: false here
+    const updateProduct = req.body;
+    console.log("🚀 ~ updateProduct ~ updateProduct:", updateProduct);
+    
+    const updateNewProduct = {
+      $set: {
+        name: updateProduct.name,
+        description: updateProduct.description,
+        price: updateProduct.price,
+        category: updateProduct.category,
+        tags: updateProduct.tags,  // Corrected from ags to tags
+        variants: updateProduct.variants,
+        inventory: updateProduct.inventory,
+        // isDeleted: updateProduct.isDeleted // Added to match schema
+      },
+    };
+
+    const result = await productServices.updateProductFromDB(filter, updateNewProduct, options);
+    console.log("🚀 ~ updateProduct ~ result:", result)
+   
+
     res.status(200).json({
       success: true,
-      message: `Products matching search term '${search}' fetched successfully!`,
+      message: 'Product updated successfully!',
       data: result,
     });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
+  } catch (err) {
+    console.log("🚀 ~ updateProduct ~ err:", err);
     res.status(500).json({
       success: false,
-      message: err.message || 'Product not found',
-      error: err,
+      message: 'Not updated',
     });
   }
 };
+//Search a product
+// const searchProduct = async (req: Request, res: Response) => {
+//   try {
+//     const search = req.query;
+//     console.log("search = ",search)
+//     // let result
+    // if(search){
+    //    result = await productServices.searchProductFromDB(search as string);
+    //   res.status(200).json({
+    //     success: true,
+    //     message: `Products matching search term '${search}' fetched successfully!`,
+    //     data: result,
+    //   });
+
+    // }else{
+    //   const id = req.params.productId;
+    //    result = await productServices.getSingleProductFromDB(id);
+    //   res.status(200).json({
+    //     success: true,
+    //     message: 'Products fetched successfully!',
+    //     data: result,
+    //   });
+    // }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   } catch (err: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: err.message || 'Product not found',
+//       error: err,
+//     });
+//   }
+// };
 
 export const productControllers = {
   createProduct,
@@ -193,5 +176,5 @@ export const productControllers = {
   getSingleProduct,
   updateProduct,
   deleteProduct,
-  searchProduct
+  // searchProduct
 };
