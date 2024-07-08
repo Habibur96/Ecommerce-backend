@@ -16,10 +16,8 @@ const searchProductFromDB = async (searchTerm: string) => {
   const query = searchTerm 
     ? { name: new RegExp(searchTerm, 'i'), isDeleted: false } 
     : { isDeleted: false };
-
   return await ProductModel.find(query);
 };
-
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,8 +27,8 @@ const getSingleProductFromDB = async (productId: any) => {
 };
 
 
-
-const updateProductFromDB = async (filter, updateNewProduct, options) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const updateProductFromDB = async (filter:any, updateNewProduct:any, options:any) => {
   try {
     const result = await ProductModel.updateOne(filter, updateNewProduct, options);
     return result;
@@ -48,12 +46,6 @@ const deleteProductFromDB = async (productId: any) => {
   return result;
 };
 
-// const searchProductFromDB = async (search: string) => {
-//   const query = { name: { $regex: search } };
-//   const result =await ProductModel.find(query);
-//   // const result = await cursor.toArray();
-//   return result;
-// };
 
 export const productServices = {
   createProductIntoDB,

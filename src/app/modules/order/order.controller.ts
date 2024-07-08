@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { orderServices } from './order.service';
 import { OrderValidationSchema } from './order.validation';
-import { OrderModel } from './order.model';
 
 //create Order
 const createOrder = async (req: Request, res: Response) => {
@@ -24,78 +23,40 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-// Retrieve All Orders
-// const getAllOrders = async (req: Request, res: Response) => {
-//   try {
-//     const result = await orderServices.getAllOrdersFromDB();
-
-//     res.status(200).json({
-//       sucess: true,
-//       message: 'Order fetched successfully!',
-//       data: result,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       success: false,
-//       message: 'Failed o create product',
-//     });
-//   }
-// };
-
 //Retrieve Orders by User Email
-const getAllOrders = async (req:Request, res:Response) => {
+const getAllOrders = async (req: Request, res: Response) => {
   try {
     const email = req.query.email;
 
     let result;
     if (email) {
-      // Find orders by email
-       result = await orderServices.getSingleOrderFromDB(email);
-      // orders = await OrderModel.find({ email: email });
-      return res.status(200).json({
+      result = await orderServices.getSingleOrderFromDB(email); // Find orders by email
 
+      return res.status(200).json({
         success: true,
         message: 'Orders fetched successfully for user email!',
-        data: result
+        data: result,
       });
     } else {
-      // Find all orders
-       result = await orderServices.getAllOrdersFromDB();
-      // orders = await OrderModel.find({});
-     return res.status(200).json({
+      result = await orderServices.getAllOrdersFromDB(); // Find all orders
+
+      return res.status(200).json({
         success: true,
         message: 'Orders fetched successfully!',
-        data: result
+        data: result,
       });
     }
-  } catch (error) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err:any) {
     res.status(500).json({
       success: false,
       message: 'Server error',
-      error: error.message
+      error: err.message,
     });
   }
-}
+};
 
-// const getOrdersByEmail = async (req: Request, res: Response) => {
-//     try {
-//       const email = req.query.email;
-//       console.log("email = ", email)
-//       const result = await orderServices.getSingleOrderFromDB(email);
-//       res.status(200).json({
-//         success: true,
-//         message: 'Orders fetched successfully for user email!',
-//         data: result,
-//       });
-//     } catch (err) {
-//       res.status(500).json({
-//         success: false,
-//         message: 'Order not found',
-//       });
-//     }
-//   };
 export const orderControllers = {
   createOrder,
   getAllOrders,
-  // getOrdersByEmail,
 };

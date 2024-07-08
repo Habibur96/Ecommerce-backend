@@ -4,7 +4,6 @@ import { productServices } from './product.service';
 import { Product } from './product.interface';
 import { ProductValidationSchema } from './product.validation';
 
-
 //Create product
 const createProduct = async (req: Request, res: Response) => {
   try {
@@ -29,8 +28,8 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-//Retrieve a List of All Products
 
+//Retrieve a List of All Products and Search Product
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const searchTerm = req.query.searchTerm as string;
@@ -44,14 +43,14 @@ const getAllProducts = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: `Products ${searchTerm} fetched successfully!`,
-      data: products
+      message: `Products matching search term ${searchTerm} fetched successfully!`,
+      data: products,
     });
   } catch (err) {
-    console.error("Error fetching products:", err);
+    console.error('Error fetching products:', err);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch products',
+      message: 'Failed to search products',
     });
   }
 };
@@ -69,12 +68,10 @@ const getSingleProduct = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: 'Data not found',
+      message: 'Failed to found product',
     });
   }
 };
-
-
 
 // //Delete a Product
 const deleteProduct = async (req: Request, res: Response) => {
@@ -87,7 +84,7 @@ const deleteProduct = async (req: Request, res: Response) => {
       message: 'Product deleted successfully!',
       data: result,
     });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -97,32 +94,30 @@ const deleteProduct = async (req: Request, res: Response) => {
   }
 };
 
-
-
+//Update Product Information
 const updateProduct = async (req: Request, res: Response) => {
   try {
     const id = req.params.productId;
     const filter = { _id: id };
-    const options = { upsert: true }; // No need for strict: false here
+    const options = { upsert: true };
     const updateProduct = req.body;
-    console.log("🚀 ~ updateProduct ~ updateProduct:", updateProduct);
-    
     const updateNewProduct = {
       $set: {
         name: updateProduct.name,
         description: updateProduct.description,
         price: updateProduct.price,
         category: updateProduct.category,
-        tags: updateProduct.tags,  // Corrected from ags to tags
+        tags: updateProduct.tags,
         variants: updateProduct.variants,
         inventory: updateProduct.inventory,
-        // isDeleted: updateProduct.isDeleted // Added to match schema
       },
     };
 
-    const result = await productServices.updateProductFromDB(filter, updateNewProduct, options);
-    console.log("🚀 ~ updateProduct ~ result:", result)
-   
+    const result = await productServices.updateProductFromDB(
+      filter,
+      updateNewProduct,
+      options,
+    );
 
     res.status(200).json({
       success: true,
@@ -130,45 +125,12 @@ const updateProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log("🚀 ~ updateProduct ~ err:", err);
     res.status(500).json({
       success: false,
       message: 'Not updated',
     });
   }
 };
-//Search a product
-// const searchProduct = async (req: Request, res: Response) => {
-//   try {
-//     const search = req.query;
-//     console.log("search = ",search)
-//     // let result
-    // if(search){
-    //    result = await productServices.searchProductFromDB(search as string);
-    //   res.status(200).json({
-    //     success: true,
-    //     message: `Products matching search term '${search}' fetched successfully!`,
-    //     data: result,
-    //   });
-
-    // }else{
-    //   const id = req.params.productId;
-    //    result = await productServices.getSingleProductFromDB(id);
-    //   res.status(200).json({
-    //     success: true,
-    //     message: 'Products fetched successfully!',
-    //     data: result,
-    //   });
-    // }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   } catch (err: any) {
-//     res.status(500).json({
-//       success: false,
-//       message: err.message || 'Product not found',
-//       error: err,
-//     });
-//   }
-// };
 
 export const productControllers = {
   createProduct,
@@ -176,5 +138,4 @@ export const productControllers = {
   getSingleProduct,
   updateProduct,
   deleteProduct,
-  // searchProduct
 };
