@@ -23,11 +23,10 @@ const createProduct = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: 'Failed o create product',
+      message: 'Failed create product',
     });
   }
 };
-
 
 //Retrieve a List of All Products and Search Product
 const getAllProducts = async (req: Request, res: Response) => {
@@ -43,8 +42,7 @@ const getAllProducts = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: `Products ${searchTerm ? `matching search term '${searchTerm}'` : 'fetched successfully!'}`,
-      data: products
-      
+      data: products,
     });
   } catch (err) {
     console.error('Error fetching products:', err);

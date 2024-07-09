@@ -23,7 +23,7 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-//Retrieve Orders by User Email
+//Retrieve Orders
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const email = req.query.email;
@@ -46,8 +46,8 @@ const getAllOrders = async (req: Request, res: Response) => {
         data: result,
       });
     }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err:any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: 'Server error',

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const orderSchema = z.object({
   email: z.string().email(),
@@ -7,6 +7,4 @@ const orderSchema = z.object({
   quantity: z.number().positive().int(),
 });
 
-
-
-export const OrderValidationSchema =  orderSchema ;
+export const OrderValidationSchema = orderSchema;

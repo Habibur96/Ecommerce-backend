@@ -13,15 +13,13 @@ const getAllOrdersFromDB = async () => {
   return result;
 };
 
-
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSingleOrderFromDB = async (email: any) => {
-    const result = await OrderModel.findOne({ email: email });
-    return result;
-  };
+  const result = await OrderModel.findOne({ email: email });
+  return result;
+};
 export const orderServices = {
-    createOrderIntoDB,
-    getAllOrdersFromDB,
-    getSingleOrderFromDB
-}
+  createOrderIntoDB,
+  getAllOrdersFromDB,
+  getSingleOrderFromDB,
+};
